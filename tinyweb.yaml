@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tinyweb
+  labels:
+    app: tinyweb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tinyweb
+  template:
+    metadata:
+      labels:
+        app: tinyweb
+    spec:
+      containers:
+      - name: tinyweb
+        image: lmayala/plan_a
+        command: ["/usr/bin/node"]
+        args: ["/opt/tinyweb/hello.js"]
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tinyweb
+  labels: 
+    app: tinyweb
+#    system: backend
+spec:
+#  type: ClusterIP
+  type: NodePort
+  selector:
+    app: tinyweb
+#    system: backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
